@@ -14,8 +14,6 @@ ollama pull nomic-embed-text
 pip install -r requirements.txt
 ```
 
-If you pull a different model, update `MODEL_NAME` at the top of `llm_generator.py`.
-
 ## Run it
 
 ```bash
