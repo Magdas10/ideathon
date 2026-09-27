@@ -4,8 +4,7 @@ Suggests new EDR detection rules (Sigma format) by comparing existing rules
 against observed activity, using a **local** LLM. Every suggestion requires
 human approval before it's written to disk.
 
-## Setup (do this once, before the demo, on good wifi)
-
+## Setup
 ```bash
 # 1. Install Ollama: https://ollama.com
 ollama pull llama3.1:8b     # or a smaller model if your laptop is weak: phi3, mistral:7b
