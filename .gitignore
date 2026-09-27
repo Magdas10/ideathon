@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Local runtime data (regenerated on use)
+edr_assistant.db
+audit_log.json
+corrections_memory.json
+
+# IDE
+.idea/
+
+# OS
+.DS_Store
+
+# Secrets — never commit these
+.env
+.env.*
+*.pem
+*credentials*

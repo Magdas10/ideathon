@@ -1,0 +1,32 @@
+{
+  "T1059.001": {
+    "name": "Command and Scripting Interpreter: PowerShell",
+    "tag": "attack.t1059.001",
+    "match": {"EventType": "process_creation", "Image_endswith": "powershell.exe"}
+  },
+  "T1053.005": {
+    "name": "Scheduled Task/Job: Scheduled Task",
+    "tag": "attack.t1053.005",
+    "match": {"EventType": "process_creation", "Image_endswith": "schtasks.exe"}
+  },
+  "T1547.001": {
+    "name": "Boot or Logon Autostart Execution: Registry Run Keys",
+    "tag": "attack.t1547.001",
+    "match": {"EventType": "registry_event", "TargetObject_contains": "CurrentVersion\\Run"}
+  },
+  "T1003.001": {
+    "name": "OS Credential Dumping: LSASS Memory",
+    "tag": "attack.t1003.001",
+    "match": {"EventType": "process_creation", "CommandLine_contains": "lsass"}
+  },
+  "T1021.001": {
+    "name": "Remote Services: Remote Desktop Protocol",
+    "tag": "attack.t1021.001",
+    "match": {"EventType": "network_connection", "DestinationPort": 3389}
+  },
+  "T1136.001": {
+    "name": "Create Account: Local Account",
+    "tag": "attack.t1136.001",
+    "match": {"EventType": "process_creation", "Image_endswith": "net.exe", "CommandLine_contains": "user"}
+  }
+}

@@ -1,0 +1,18 @@
+title: RDP Connection from Untrusted Source
+id: 98765432-1234-5678-9012-345678901234
+status: stable
+description: Detects RDP connections from untrusted sources, indicative of remote
+  services abuse.
+tags:
+- attack.t1021.001
+logsource:
+  category: network_connection
+  product: windows
+detection:
+  selection:
+    DestinationPort: 3389
+    SourceIp|not in:
+    - 192.168.1.0/24
+    - 10.0.0.0/8
+  condition: selection
+level: high

@@ -1,0 +1,76 @@
+[
+  {
+    "timestamp": "2026-09-25T10:12:01Z",
+    "host": "WKSTN-04",
+    "EventType": "process_creation",
+    "Image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "CommandLine": "powershell.exe -EncodedCommand SQBFAFgA...",
+    "User": "CORP\\jsmith"
+  },
+  {
+    "timestamp": "2026-09-25T10:15:44Z",
+    "host": "WKSTN-04",
+    "EventType": "process_creation",
+    "Image": "C:\\Windows\\System32\\schtasks.exe",
+    "CommandLine": "schtasks /create /tn Updater /tr C:\\temp\\upd.exe /sc onlogon",
+    "User": "CORP\\jsmith"
+  },
+  {
+    "timestamp": "2026-09-25T10:20:09Z",
+    "host": "WKSTN-04",
+    "EventType": "registry_event",
+    "TargetObject": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\Updater",
+    "Details": "C:\\temp\\upd.exe",
+    "User": "CORP\\jsmith"
+  },
+  {
+    "timestamp": "2026-09-25T11:02:33Z",
+    "host": "SRV-DC01",
+    "EventType": "process_creation",
+    "Image": "C:\\Users\\Public\\procdump.exe",
+    "CommandLine": "procdump.exe -ma lsass.exe C:\\temp\\lsass.dmp",
+    "User": "CORP\\svc_backup"
+  },
+  {
+    "timestamp": "2026-09-25T11:03:10Z",
+    "host": "SRV-DC01",
+    "EventType": "process_creation",
+    "Image": "C:\\Windows\\System32\\rundll32.exe",
+    "CommandLine": "rundll32.exe comsvcs.dll, MiniDump 624 C:\\temp\\lsass2.dmp full",
+    "User": "CORP\\svc_backup"
+  },
+  {
+    "timestamp": "2026-09-25T12:41:55Z",
+    "host": "SRV-FILE01",
+    "EventType": "network_connection",
+    "DestinationIp": "203.0.113.44",
+    "DestinationPort": 3389,
+    "Protocol": "tcp",
+    "SourceIp": "198.51.100.9",
+    "User": "CORP\\administrator"
+  },
+  {
+    "timestamp": "2026-09-25T12:42:02Z",
+    "host": "SRV-FILE01",
+    "EventType": "logon",
+    "LogonType": 10,
+    "SourceIp": "198.51.100.9",
+    "User": "CORP\\administrator"
+  },
+  {
+    "timestamp": "2026-09-25T13:05:00Z",
+    "host": "WKSTN-11",
+    "EventType": "process_creation",
+    "Image": "C:\\Windows\\System32\\net.exe",
+    "CommandLine": "net user backupsvc P@ssw0rd123 /add",
+    "User": "CORP\\jsmith"
+  },
+  {
+    "timestamp": "2026-09-25T13:05:05Z",
+    "host": "WKSTN-11",
+    "EventType": "process_creation",
+    "Image": "C:\\Windows\\System32\\net.exe",
+    "CommandLine": "net localgroup administrators backupsvc /add",
+    "User": "CORP\\jsmith"
+  }
+]
