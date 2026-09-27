@@ -7,8 +7,8 @@ human approval before it's written to disk.
 ## Setup
 ```bash
 # 1. Install Ollama: https://ollama.com
-ollama pull llama3.1:8b     # or a smaller model if your laptop is weak: phi3, mistral:7b
-ollama pull nomic-embed-text  # local embedding model, used for correction memory
+ollama pull llama3.1:8b
+ollama pull nomic-embed-text
 
 # 2. Python deps
 pip install -r requirements.txt
@@ -19,8 +19,8 @@ If you pull a different model, update `MODEL_NAME` at the top of `llm_generator.
 ## Run it
 
 ```bash
-ollama serve          # if not already running as a background service
-streamlit run app.py  # opens http://localhost:8501
+ollama serve
+streamlit run app.py
 ```
 
 ## Demo flow
