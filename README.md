@@ -54,28 +54,3 @@ streamlit run app.py  # opens http://localhost:8501
    a similar gap later and watch it get pulled in as guidance automatically.
 7. **Section 5** — audit log: every approve/reject decision, timestamped.
 
-## Proving the "runs locally" claim live
-
-Turn off wifi before clicking "Generate suggestion" — it still works,
-because the only thing it talks to is `localhost:11434` (Ollama).
-
-## Files
-
-- `sample_data/existing_rules.yaml` — fixture: the EDR's current ruleset
-- `sample_data/sample_logs.json` — fixture: synthetic Sysmon-style events
-- `sample_data/technique_map.json` — MITRE technique → log-pattern map
-- `gap_analysis.py` — deterministic gap detection (no LLM)
-- `llm_generator.py` — calls Ollama: generate, refine (feedback), self-test
-- `test_fire.py` — runs a candidate rule against a set of logs
-- `corrections_store.py` — local embedding-based memory of analyst corrections
-- `app.py` — Streamlit UI wiring it all together
-- `corrections_memory.json` — created at runtime, holds correction history
-- `audit_log.json` — created at runtime, holds approve/reject decisions
-
-## Path to a real MVP (say this in your pitch)
-
-- Ingest a real EDR's exported rules/logs instead of fixtures
-- Expand the MITRE technique map beyond the demo's ~6 techniques
-- Swap the naive test-fire matcher for a real Sigma backend (pySigma + a
-  target backend) for accurate query translation
-- Handle malformed/unexpected input without crashing
