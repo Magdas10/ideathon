@@ -1,5 +1,5 @@
-title: Suspicious OS Credential Dumping via Procdump
-id: 98765432-0987-0987-0987-987654321098
+title: Suspicious OS Credential Dumping via LSASS Memory
+id: 65432100-4321-4321-4321-432100654321
 status: stable
 description: Detects execution of procdump.exe or rundll32.exe with LSASS memory dumping
   arguments, indicative of OS Credential Dumping via LSASS Memory.
@@ -13,8 +13,9 @@ detection:
     Image|within:
     - C:\\Users\\Public\\procdump.exe
     - C:\\Windows\\System32\\rundll32.exe
+    User|equals: svc_backup
     CommandLine|contains:
     - -ma lsass.exe
     - comsvcs.dll, MiniDump
-  condition: selection
+  condition: and
 level: high

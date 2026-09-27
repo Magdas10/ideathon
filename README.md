@@ -23,11 +23,14 @@ streamlit run app.py
 
 ## Demo flow
 
-1. **Section 1** — show the existing Sigma rules already in place (3 rules).
+1. **Section 1** — show existing Sigma rules, covered techniques, and **security
+   policies** (`sample_data/security_policies.json`) that define what must be
+   detected.
 2. **Section 2** — click "Run gap analysis". This is plain Python, no LLM:
    it scans the sample logs against a MITRE ATT&CK technique map and finds
    activity (LSASS dumping, suspicious RDP logon, local account creation)
-   that isn't covered by any existing rule.
+   that isn't covered by any existing rule. Gaps that violate an active policy
+   are flagged explicitly.
 3. **Section 3** — for each gap, click "Generate suggestion". This is the
    only step that calls the local model. You'll get back:
    - a draft Sigma rule, rationale, and estimated false-positive risk
@@ -38,6 +41,8 @@ streamlit run app.py
    - a live test-fire count against the real sample logs
    - if past corrections exist for a similar gap, a note showing they were
      used as guidance for this draft
+   - applicable **security policies** injected into the LLM prompt so the draft
+     satisfies organizational requirements
 4. **Not quite right?** Type feedback in plain English (e.g. "narrow this
    to exclude svchost.exe") and click **Refine with feedback** — one more
    LLM pass, not manual YAML editing. You can also just hand-edit the YAML

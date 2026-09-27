@@ -2,6 +2,8 @@ import json
 import yaml
 from pathlib import Path
 
+import policy_store
+
 DATA_DIR = Path(__file__).parent / "sample_data"
 
 
@@ -66,6 +68,7 @@ def analyze() -> list[dict]:
                     "name": info["name"],
                     "tag": info["tag"],
                     "matching_logs": matching_logs,
+                    "policies": policy_store.policies_for_technique(tech_id),
                 }
             )
     return gaps

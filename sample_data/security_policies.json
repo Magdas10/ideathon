@@ -1,0 +1,38 @@
+[
+  {
+    "id": "POL-001",
+    "title": "Credential Access Protection",
+    "status": "active",
+    "description": "Credential stores (especially LSASS) must be monitored. Unauthorized memory dumping is prohibited except for approved security tooling.",
+    "techniques": ["T1003.001"],
+    "requirements": [
+      "A Sigma detection rule must exist for LSASS memory dumping",
+      "Rule severity must be high",
+      "Approved support tools may be excluded via explicit exceptions in the rule"
+    ]
+  },
+  {
+    "id": "POL-002",
+    "title": "Remote Access Control",
+    "status": "active",
+    "description": "Remote desktop and other remote access paths must be logged and monitored for suspicious use.",
+    "techniques": ["T1021.001"],
+    "requirements": [
+      "RDP connections must have a dedicated detection rule",
+      "Rules should flag non-standard source hosts or unusual account usage",
+      "Severity should reflect whether the connection is from outside trusted admin subnets"
+    ]
+  },
+  {
+    "id": "POL-003",
+    "title": "Account Lifecycle Monitoring",
+    "status": "active",
+    "description": "Creation of local accounts must be monitored to detect unauthorized persistence or backdoor accounts.",
+    "techniques": ["T1136.001"],
+    "requirements": [
+      "Local account creation events must be detected",
+      "Rules should focus on net.exe / net1.exe user creation patterns",
+      "Benign IT provisioning activity should be considered in false-positive risk"
+    ]
+  }
+]

@@ -4,6 +4,7 @@ from pathlib import Path
 import streamlit as st
 
 import gap_analysis
+import policy_store
 import test_fire
 import corrections_store
 import database
@@ -36,6 +37,18 @@ with col2:
     for t in gap_analysis.covered_techniques():
         st.success(f"{t['technique_id']} — {t['name']}")
 
+st.subheader("Security policies")
+st.caption(
+    "Organization policies define what must be detected. The assistant uses these "
+    "when drafting rules and flags gaps that leave a policy requirement unmet."
+)
+for policy in policy_store.load_policies():
+    techniques = ", ".join(policy.get("techniques", []))
+    with st.expander(f"{policy['id']} — {policy['title']} ({techniques})"):
+        st.markdown(policy["description"])
+        for req in policy.get("requirements", []):
+            st.markdown(f"- {req}")
+
 st.header("2. Gap analysis (deterministic, no LLM)")
 st.caption(
     "This step scans the sample logs against a MITRE ATT&CK technique map and "
@@ -57,6 +70,11 @@ if st.session_state.gaps is not None:
             f"**Gap: {gap['technique_id']} — {gap['name']}** "
             f"({len(gap['matching_logs'])} matching log events, no rule covers this)"
         )
+        for policy in gap.get("policies", []):
+            st.error(
+                f"📋 **Policy gap:** {policy['id']} — {policy['title']} requires "
+                f"detection for {gap['technique_id']}, but no rule exists yet."
+            )
         with st.expander("View matching log events"):
             st.json(gap["matching_logs"])
 
@@ -80,6 +98,12 @@ if st.session_state.gaps:
             st.session_state[selftest_key] = None
         if used_corrections_key not in st.session_state:
             st.session_state[used_corrections_key] = []
+
+        if gap.get("policies"):
+            with st.expander(f"📋 {len(gap['policies'])} policy/policies will guide this draft"):
+                for policy in gap["policies"]:
+                    st.markdown(f"**{policy['id']} — {policy['title']}**")
+                    st.caption(policy["description"])
 
         if st.button(f"Generate suggestion for {key}", key=f"gen_{key}"):
             past = corrections_store.find_similar_corrections(
@@ -221,6 +245,12 @@ if st.session_state.gaps:
                         )
 
                         st.success(f"Approved and written to {APPROVED_DIR / filename}")
+                        if gap.get("policies"):
+                            policy_ids = ", ".join(p["id"] for p in gap["policies"])
+                            st.info(
+                                f"📋 Policy compliance: approved rule addresses "
+                                f"{policy_ids} for {gap['technique_id']}."
+                            )
                         if learned:
                             st.info(
                                 "📚 Your changes were saved to correction memory "

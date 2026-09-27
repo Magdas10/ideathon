@@ -4,6 +4,8 @@ import re
 import ollama
 import yaml as _yaml
 
+import policy_store
+
 MODEL_NAME = "llama3.1:8b"
 
 SYSTEM_PROMPT = """You are a detection engineering assistant helping a security \
@@ -51,10 +53,12 @@ def _build_prompt(gap: dict, style_examples: str, past_corrections: list[dict] |
             + "\nMake sure your new draft reflects these corrections where relevant.\n"
         )
 
+    policy_context = policy_store.format_policies_for_prompt(gap.get("policies", []))
+
     return f"""Existing rules in this environment (for style/format reference only):
 
 {style_examples}
-{correction_context}
+{policy_context}{correction_context}
 ---
 
 A detection gap has been found. Logs show activity matching MITRE ATT&CK \
@@ -65,8 +69,8 @@ Sample matching log events:
 
 Write ONE new Sigma rule to detect this technique, in the same style as the \
 existing rules above. Give it a new random UUID for the id field, tag it with \
-"{gap['tag']}", and set an appropriate level. Then explain your rationale and \
-estimated false-positive risk."""
+"{gap['tag']}", and set an appropriate level that satisfies any applicable \
+security policies. Then explain your rationale and estimated false-positive risk."""
 
 
 _SIGMA_START = re.compile(r"^(?:---\s*\n)?title\s*:", re.MULTILINE | re.IGNORECASE)
@@ -215,10 +219,12 @@ def refine_rule_suggestion(gap: dict, current_yaml: str, feedback: str, style_ex
     Applies ONE round of human feedback to an existing draft. This is a
     single call, not a loop - the analyst decides if/when to click again.
     """
+    policy_context = policy_store.format_policies_for_prompt(gap.get("policies", []))
+
     prompt = f"""Existing rules in this environment (for style/format reference only):
 
 {style_examples}
-
+{policy_context}
 ---
 
 Here is a draft Sigma rule for MITRE ATT&CK technique {gap['technique_id']} - {gap['name']}:
@@ -228,8 +234,9 @@ Here is a draft Sigma rule for MITRE ATT&CK technique {gap['technique_id']} - {g
 The security analyst reviewing this draft has this feedback on what to improve:
 "{feedback}"
 
-Revise the rule to address this feedback. Keep the same id if one was already \
-set. Then briefly restate the rationale and estimated false-positive risk."""
+Revise the rule to address this feedback while still satisfying any applicable \
+security policies. Keep the same id if one was already set. Then briefly restate \
+the rationale and estimated false-positive risk."""
 
     response = ollama.chat(
         model=MODEL_NAME,
