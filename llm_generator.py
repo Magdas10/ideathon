@@ -109,7 +109,6 @@ def _extract_yaml_block(text: str) -> str | None:
             if _looks_like_sigma_rule(candidate):
                 return candidate
 
-    # Some local models omit markdown fences and return raw YAML.
     stripped = text.strip()
     if _looks_like_sigma_rule(stripped):
         return _trim_trailing_prose(stripped)
@@ -186,7 +185,6 @@ def generate_rule_suggestion(
     past_corrections: list[dict] | None = None,
     retry_note: str = "",
 ) -> dict:
-    """Calls the local model and returns a parsed suggestion dict."""
     prompt = _build_prompt(gap, style_examples, past_corrections)
     if retry_note:
         prompt += (

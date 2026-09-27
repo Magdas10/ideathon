@@ -82,8 +82,6 @@ if st.session_state.gaps:
             st.session_state[used_corrections_key] = []
 
         if st.button(f"Generate suggestion for {key}", key=f"gen_{key}"):
-            # Pull relevant past corrections BEFORE generating, so the model
-            # gets the benefit of what analysts fixed on similar gaps before.
             past = corrections_store.find_similar_corrections(
                 gap_description, technique_id=gap["technique_id"]
             )
@@ -93,8 +91,6 @@ if st.session_state.gaps:
                 suggestion = generate_rule_suggestion(gap, style_examples, past_corrections=past)
                 st.session_state[suggestion_key] = suggestion
 
-            # Self-test: generate + run check logs ONCE, before showing the
-            # analyst the final answer. Not a retry loop - a single pass.
             if suggestion["parsed_rule"] is not None:
                 with st.spinner("Running a one-time self-check (generalization + false-positive test)..."):
                     self_test = generate_self_test_logs(gap, suggestion["parsed_rule"])
@@ -131,7 +127,6 @@ if st.session_state.gaps:
             st.markdown(f"**Rationale:** {suggestion['rationale']}")
             st.markdown(f"**Estimated false-positive risk:** {suggestion['fp_risk']}")
 
-            # ---- Self-test results (generated once, above, not re-run in a loop) ----
             self_test = st.session_state[selftest_key]
             if self_test:
                 try:
@@ -167,7 +162,7 @@ if st.session_state.gaps:
                         with st.expander("View synthetic benign look-alikes used"):
                             st.json(lookalikes)
 
-            # ---- Test-fire against real sample logs ----
+            # Test-fire against real sample logs
             try:
                 current_parsed = yaml.safe_load(edited_yaml)
                 matches = test_fire.test_fire(current_parsed, logs)
@@ -182,7 +177,6 @@ if st.session_state.gaps:
                 st.error(f"Edited YAML is invalid: {e}")
                 current_parsed = None
 
-            # ---- Feedback / refine (single round-trip, not a loop) ----
             st.markdown("**✏️ Not quite right? Tell the AI what to improve instead of editing by hand:**")
             feedback = st.text_area(
                 "e.g. \"narrow this to exclude svchost.exe\" or \"this is too broad, only match when run as SYSTEM\"",
@@ -216,8 +210,6 @@ if st.session_state.gaps:
                             file_path=str(APPROVED_DIR / filename),
                         )
 
-                        # Remember it if the human changed anything vs. the
-                        # AI's original first draft for this gap.
                         original_first_draft = suggestion.get("rule_yaml_text", "")
                         note = st.session_state.get(f"last_feedback_{key}", "")
                         learned = corrections_store.add_correction(

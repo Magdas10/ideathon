@@ -48,12 +48,6 @@ def _covered_tags(rules: list[dict]) -> set[str]:
 
 
 def analyze() -> list[dict]:
-    """
-    Returns a list of gap dicts:
-      {technique_id, name, tag, matching_logs: [...]}
-    for every technique that appears in the logs but has no existing
-    rule tagged with it.
-    """
     rules = load_existing_rules()
     logs = load_logs()
     technique_map = load_technique_map()
